@@ -274,5 +274,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **data.gov.sg** - For providing the prayer times API
 - **Majlis Ugama Islam Singapura (MUIS)** - For the prayer timetable
-- **Berlime.com** - For inspiration and tools
+- **https://berlime.com** - For inspiration and tools
 - **Singapore Muslim Community** - For the motivation to build this app 
