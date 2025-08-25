@@ -19,6 +19,10 @@
         Loading today's date...
       </div>
       
+      <div id="countdown-display" class="countdown-display" style="display: none;">
+        <span id="countdown-text">Loading countdown...</span>
+      </div>
+      
       <ul id="times" class="prayer-times">
         <li class="loading">Loading prayer times...</li>
       </ul>
@@ -122,6 +126,128 @@
     `;
   }
 
+  // Countdown timer functionality
+  let countdownInterval = null;
+  let currentPrayerData = null;
+
+  // Prayer order: subuh -> zohor -> asar -> maghrib -> isyak
+  const prayerOrder = ['subuh', 'zohor', 'asar', 'maghrib', 'isyak'];
+  const prayerNames = {
+    'subuh': 'Subuh',
+    'zohor': 'Zohor', 
+    'asar': 'Asar',
+    'maghrib': 'Maghrib',
+    'isyak': 'Isyak'
+  };
+
+  // Convert time string to Date object for today
+  function timeStringToDate(timeString) {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+  }
+
+  // Convert time string to Date object for tomorrow
+  function timeStringToDateTomorrow(timeString) {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+  }
+
+  // Find current prayer period and next prayer
+  function findCurrentAndNextPrayer(prayerTimes) {
+    const now = new Date();
+    
+    // Create array of prayer times with their names and dates
+    const prayers = [
+      { name: 'subuh', time: timeStringToDate(prayerTimes.subuh) },
+      { name: 'zohor', time: timeStringToDate(prayerTimes.zohor) },
+      { name: 'asar', time: timeStringToDate(prayerTimes.asar) },
+      { name: 'maghrib', time: timeStringToDate(prayerTimes.maghrib) },
+      { name: 'isyak', time: timeStringToDate(prayerTimes.isyak) }
+    ];
+
+    // If we're after isyak, next prayer is subuh tomorrow
+    if (now > prayers[4].time) {
+      return {
+        currentPrayer: 'isyak',
+        nextPrayer: 'subuh',
+        nextPrayerTime: timeStringToDateTomorrow(prayerTimes.tomorrow_subuh || prayerTimes.subuh),
+        isNextDay: true
+      };
+    }
+
+    // Find which prayer period we're in
+    for (let i = 0; i < prayers.length; i++) {
+      if (now < prayers[i].time) {
+        const currentPrayer = i === 0 ? 'isyak' : prayers[i-1].name;
+        return {
+          currentPrayer: currentPrayer,
+          nextPrayer: prayers[i].name,
+          nextPrayerTime: prayers[i].time,
+          isNextDay: false
+        };
+      }
+    }
+
+    // If we're before subuh, next prayer is subuh
+    return {
+      currentPrayer: 'isyak',
+      nextPrayer: 'subuh',
+      nextPrayerTime: prayers[0].time,
+      isNextDay: false
+    };
+  }
+
+  // Calculate countdown
+  function calculateCountdown(nextPrayerTime) {
+    const now = new Date();
+    const diff = nextPrayerTime - now;
+    
+    if (diff <= 0) {
+      return '00:00:00';
+    }
+    
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
+  // Update countdown display
+  function updateCountdown() {
+    if (!currentPrayerData) {
+      document.getElementById('countdown-display').style.display = 'none';
+      return;
+    }
+
+    const now = new Date();
+    const currentTime = now.toLocaleTimeString('en-US', { 
+      hour12: true, 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      
+      timeZone: 'Asia/Singapore'
+    });
+    
+    const countdown = calculateCountdown(currentPrayerData.nextPrayerTime);
+    const nextPrayerName = prayerNames[currentPrayerData.nextPrayer];
+    
+    document.getElementById('countdown-text').textContent = `Current time: ${currentTime} | ${nextPrayerName} in ${countdown}`;
+    document.getElementById('countdown-display').style.display = 'block';
+
+    // If countdown reaches zero, refresh prayer times to get updated data
+    if (countdown === '00:00:00') {
+      setTimeout(() => {
+        loadPrayerTimes();
+      }, 1000);
+    }
+  }
+
   // Load prayer times
   function loadPrayerTimes() {
     fetch('/api/prayer-times')
@@ -172,8 +298,19 @@
             </a>
           `;
           ul.appendChild(timetableLi);
+
+          // Set up countdown timer
+          currentPrayerData = findCurrentAndNextPrayer(todayData);
+          updateCountdown();
+          
+          // Start countdown interval
+          if (countdownInterval) {
+            clearInterval(countdownInterval);
+          }
+          countdownInterval = setInterval(updateCountdown, 1000);
         } else {
           ul.innerHTML = `<li class="error">No data found for today (${todayStr}).</li>`;
+          document.getElementById('countdown-display').style.display = 'none';
         }
       })
       .catch(err => {
@@ -183,6 +320,7 @@
           Error: ${err.message}
         </li>`;
         console.error('Prayer times fetch error:', err);
+        document.getElementById('countdown-display').style.display = 'none';
       });
   }
 

@@ -21,6 +21,11 @@ def get_singapore_date
   Time.now.strftime("%Y-%m-%d")
 end
 
+def get_tomorrow_singapore_date
+  # Get tomorrow's date in Singapore timezone
+  (Time.now + 86400).strftime("%Y-%m-%d")
+end
+
 def fetch_data_from_api(date = nil)
   # Use provided date or default to today in Singapore timezone
   target_date = date || get_singapore_date
@@ -169,7 +174,9 @@ get '/api/prayer-times' do
     records = data.dig("result", "records") || []
 
     today = get_singapore_date
+    tomorrow = get_tomorrow_singapore_date
     today_record = records.find { |r| r["Date"] == today }
+    tomorrow_record = records.find { |r| r["Date"] == tomorrow }
 
     if today_record
       formatted = {
@@ -179,7 +186,8 @@ get '/api/prayer-times' do
         zohor: today_record["Zohor"],
         asar: today_record["Asar"],
         maghrib: today_record["Maghrib"],
-        isyak: today_record["Isyak"]
+        isyak: today_record["Isyak"],
+        tomorrow_subuh: tomorrow_record ? tomorrow_record["Subuh"] : nil
       }
 
       JSON.pretty_generate([formatted])  # frontend expects array
@@ -209,4 +217,3 @@ get '/api/refresh' do
     { error: "Failed to refresh cache: #{e.message}" }.to_json
   end
 end
-

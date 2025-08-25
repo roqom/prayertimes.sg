@@ -353,3 +353,44 @@ body {
     font-size: 0.5rem;
   }
 } 
+/* Countdown Timer Styles */
+.countdown-display {
+  text-align: center;
+  margin: 1rem 0 1.5rem 0;
+  padding: 1rem;
+  background: #f8f8f8;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 1rem;
+  letter-spacing: 0.025em;
+}
+
+#countdown-text {
+  background: #1a1a1a;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  display: inline-block;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+}
+
+/* Responsive countdown styles */
+@media (max-width: 640px) {
+  .countdown-display {
+    margin: 0.875rem 0 1.25rem 0;
+    padding: 0.875rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .countdown-display {
+    margin: 0.75rem 0 1rem 0;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
