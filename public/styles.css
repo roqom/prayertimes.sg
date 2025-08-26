@@ -33,16 +33,16 @@ body {
 }
 
 .header h1 {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   letter-spacing: -0.025em;
   color: #1a1a1a;
 }
 
 .header p {
   color: #666666;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 400;
 }
 
@@ -60,15 +60,15 @@ body {
 }
 
 .islamic-date {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.375rem;
   letter-spacing: 0.025em;
 }
 
 .gregorian-date {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #666666;
   font-weight: 400;
 }
@@ -103,16 +103,16 @@ body {
 .prayer-name {
   font-weight: 500;
   color: #1a1a1a;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .prayer-time-value {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #1a1a1a;
   background: #f8f8f8;
-  padding: 0.375rem 0.75rem;
+  padding: 0.5rem 0.875rem;
   border-radius: 6px;
   border: 1px solid #f0f0f0;
 }
@@ -299,15 +299,15 @@ body {
   }
   
   .header {
-    padding: 1rem 0.75rem;
+    padding: 1.25rem 0.75rem;
   }
   
   .header h1 {
-    font-size: 1.125rem;
+    font-size: 1.375rem;
   }
   
   .header p {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
   }
   
   .content {
@@ -315,35 +315,35 @@ body {
   }
   
   .date-display {
-    padding: 0.5rem;
+    padding: 0.75rem;
     margin-bottom: 0.75rem;
   }
   
   .islamic-date {
-    font-size: 0.875rem;
+    font-size: 1.125rem;
   }
   
   .gregorian-date {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
   }
   
   .prayer-time {
-    padding: 0.625rem 0.75rem;
+    padding: 0.75rem 0.875rem;
   }
   
   .prayer-name {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
   }
   
   .prayer-time-value {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.375rem 0.625rem;
   }
   
   .countdown-display {
-    margin: 0.375rem 0 0.5rem 0;
+    margin: 0.5rem 0 0.75rem 0;
     padding: 0;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
   }
   
   .prayer-timetable-link {
@@ -435,28 +435,28 @@ body {
 /* Countdown Timer Styles */
 .countdown-display {
   text-align: center;
-  margin: 0.5rem 0 0.75rem 0;
+  margin: 0.75rem 0 1rem 0;
   padding: 0;
   background: transparent;
   border: none;
   font-weight: 600;
   color: #1a1a1a;
-  font-size: 0.875rem;
+  font-size: 1rem;
   letter-spacing: 0.025em;
 }
 
 #countdown-text {
   background: #1a1a1a;
   color: #ffffff;
-  padding: 0.375rem 0.75rem;
+  padding: 0.5rem 1rem;
   border-radius: 6px;
   display: inline-block;
   margin: 0 auto;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 1rem;
   /* Keep the capsule size steady regardless of text length */
-  min-width: 20ch; /* fits "Maghrib in 00:00:00" comfortably */
+  min-width: 22ch; /* fits "Maghrib in 00:00:00" comfortably */
   text-align: center;
   white-space: nowrap;
   font-variant-numeric: tabular-nums; /* fixed-width digits to avoid jitter */
