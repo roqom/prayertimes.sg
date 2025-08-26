@@ -51,19 +51,7 @@
       return { day: 1, month: 'Muharram', year: 1446 };
     }
     
-    // Islamic calendar month names
-    const islamicMonths = [
-      'Muharram', 'Safar', 'Rabi al-Awwal', 'Rabi al-Thani',
-      'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', 'Sha\'ban',
-      'Ramadan', 'Shawwal', 'Dhu al-Qadah', 'Dhu al-Hijjah'
-    ];
-    
     // TODO: Incomplete Hijri date mapping - see GitHub issue #1
-    // Only covers specific dates in 2025, shows fallback for others
-    // Current coverage: Jan 1-3, Aug 1-31, Dec 31, 2025
-    // All other dates show "1 Muharram 1446H" (incorrect)
-    // Planned fix: Implement proper Hijri calculation algorithm
-    // For Quick fix: Extended mapping for 2025 (you can add more dates as needed)
     const hijriDates2025 = {
       '2025-01-01': { day: 1, month: 'Rajab', year: 1446 },
       '2025-01-02': { day: 2, month: 'Rajab', year: 1446 },
@@ -130,8 +118,6 @@
   let countdownInterval = null;
   let currentPrayerData = null;
 
-  // Prayer order: subuh -> zohor -> asar -> maghrib -> isyak
-  const prayerOrder = ['subuh', 'zohor', 'asar', 'maghrib', 'isyak'];
   const prayerNames = {
     'subuh': 'Subuh',
     'zohor': 'Zohor', 
@@ -180,25 +166,34 @@
       };
     }
 
+    // If we're before subuh, next prayer is subuh
+    if (now < prayers[0].time) {
+      return {
+        currentPrayer: 'isyak',
+        nextPrayer: 'subuh',
+        nextPrayerTime: prayers[0].time,
+        isNextDay: false
+      };
+    }
+
     // Find which prayer period we're in
-    for (let i = 0; i < prayers.length; i++) {
-      if (now < prayers[i].time) {
-        const currentPrayer = i === 0 ? 'isyak' : prayers[i-1].name;
+    for (let i = 0; i < prayers.length - 1; i++) {
+      if (now >= prayers[i].time && now < prayers[i + 1].time) {
         return {
-          currentPrayer: currentPrayer,
-          nextPrayer: prayers[i].name,
-          nextPrayerTime: prayers[i].time,
+          currentPrayer: prayers[i].name,
+          nextPrayer: prayers[i + 1].name,
+          nextPrayerTime: prayers[i + 1].time,
           isNextDay: false
         };
       }
     }
 
-    // If we're before subuh, next prayer is subuh
+    // If we're at or after isyak but before midnight, next prayer is subuh tomorrow
     return {
       currentPrayer: 'isyak',
       nextPrayer: 'subuh',
-      nextPrayerTime: prayers[0].time,
-      isNextDay: false
+      nextPrayerTime: timeStringToDateTomorrow(prayerTimes.tomorrow_subuh || prayerTimes.subuh),
+      isNextDay: true
     };
   }
 
@@ -225,19 +220,10 @@
       return;
     }
 
-    const now = new Date();
-    const currentTime = now.toLocaleTimeString('en-US', { 
-      hour12: true, 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      
-      timeZone: 'Asia/Singapore'
-    });
-    
     const countdown = calculateCountdown(currentPrayerData.nextPrayerTime);
     const nextPrayerName = prayerNames[currentPrayerData.nextPrayer];
     
-    document.getElementById('countdown-text').textContent = `Current time: ${currentTime} | ${nextPrayerName} in ${countdown}`;
+    document.getElementById('countdown-text').textContent = `${nextPrayerName} in ${countdown}`;
     document.getElementById('countdown-display').style.display = 'block';
 
     // If countdown reaches zero, refresh prayer times to get updated data

@@ -6,9 +6,7 @@ require 'uri'
 require 'time'
 require 'fileutils' # Added for FileUtils
 
-# Remove hardcoded bind/port for deployment compatibility
-# set :bind, '0.0.0.0'
-# set :port, 4567
+
 
 CACHE_FILE = "cache/prayer_times.json"
 DATASET_ID = "d_e81ea2337599b674c4f645c1af93e0dc" # placeholder, update to correct one
