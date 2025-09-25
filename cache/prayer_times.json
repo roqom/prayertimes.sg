@@ -33,9 +33,20 @@
         "Asar": "4:24",
         "Maghrib": "7:12",
         "Isyak": "8:22"
+      },
+      {
+        "_id": 268,
+        "Date": "2025-09-25",
+        "Day": "Thursday",
+        "Subuh": "5:37",
+        "Syuruk": "6:54",
+        "Zohor": "12:58",
+        "Asar": "4:01",
+        "Maghrib": "7:01",
+        "Isyak": "8:09"
       }
     ]
   },
-  "last_updated": "2025-08-24T10:36:08+08:00",
-  "last_fetched_date": "2025-08-24"
+  "last_updated": "2025-09-25T20:55:52+08:00",
+  "last_fetched_date": "2025-09-25"
 }
